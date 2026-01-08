@@ -1,5 +1,5 @@
-function App() {
-  return <h1 className="bg-gray-50">Hello</h1>;
-}
+import ChatContainer from "./components/ChatContainer";
 
-export default App;
+export default function App() {
+  return <ChatContainer />;
+}

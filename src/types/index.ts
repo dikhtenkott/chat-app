@@ -5,7 +5,7 @@ export interface Message {
   createdAt: string;
 }
 
-export interface CreateMessageRequest {
+export interface PostMessageRequest {
   message: string;
   author: string;
 }
@@ -17,4 +17,10 @@ export interface ErrorResponse {
     param: string;
     location: string;
   }>;
+}
+
+export interface MessageParams {
+  after?: string;
+  limit?: number;
+  before?: string;
 }
