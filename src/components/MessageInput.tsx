@@ -37,15 +37,15 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
   }, [message]);
 
   return (
-    <div className="p-2 bg-gray-50 ">
-      <div className="flex m-auto gap-2 max-w-[800px]">
+    <div className="p-2 bg-sky-600">
+      <div className="flex m-auto gap-2 max-w-[640px] px-6">
         <textarea
           ref={textareaRef}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Message"
-          className="w-full flex-1 p-2 border resize-none"
+          className="w-full flex-1 px-2 py-3 rounded bg-white border border-gray-400 focus:outline-none focus:ring-2 focus:ring-black/20 resize-none"
           rows={1}
           disabled={disabled}
           aria-label="Message"
@@ -54,7 +54,7 @@ export default function MessageInput({ onSend, disabled }: MessageInputProps) {
         <button
           onClick={handleSend}
           disabled={!message.trim() || disabled}
-          className="p-2 bg-orange-500 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-2 bg-orange-500 cursor-pointer hover:bg-orange-600 transition-colors min-w-[80px] text-white rounded disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label="Send message"
         >
           Send

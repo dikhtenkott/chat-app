@@ -17,7 +17,7 @@ export function useMessages(initialLimit = 20): MessagesState & {
 } {
   const [state, setState] = useState<MessagesState>({
     messages: [],
-    isLoading: true,
+    isLoading: false,
     isSending: false,
     hasMore: true,
     oldestTimestamp: null,
@@ -25,6 +25,10 @@ export function useMessages(initialLimit = 20): MessagesState & {
   });
 
   const fetchMessages = useCallback(async (params?: MessageParams) => {
+    if(state.isLoading) {
+      return
+    }
+
     const limit = params?.limit ?? initialLimit;
     setState(s => ({ ...s, isLoading: true }));
     try {
@@ -40,13 +44,13 @@ export function useMessages(initialLimit = 20): MessagesState & {
     } finally {
       setState(s => ({ ...s, isLoading: false }));
     }
-  }, [initialLimit]);
+  }, [initialLimit, state.isLoading]);
 
   const loadMore = useCallback(() => {
     if (state.oldestTimestamp && state.hasMore) {
       fetchMessages({ before: state.oldestTimestamp, limit: initialLimit });
     }
-  }, [state.oldestTimestamp, state.hasMore, fetchMessages]);
+  }, [state.oldestTimestamp, state.hasMore, fetchMessages, initialLimit]);
 
   const sendMessage = useCallback(async (data: PostMessageRequest) => {
     setState(s => ({ ...s, isSending: true }));

@@ -12,7 +12,7 @@ export default function ChatContainer() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-[url(/bg.png)]">
       {error && (
         <div className="mt-2 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm flex items-center justify-between">
           <span>{error}</span>

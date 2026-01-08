@@ -18,6 +18,7 @@ export default function MessageList({
 
   const [lastHeight, setLastHeight] = useState<number>(0);
   const [isAutoScrollEnabled, setIsAutoScrollEnabled] = useState(true);
+  const [isScrollDownVisible, setIsScrollDownVisible] = useState(false);
 
   useEffect(() => {
     if (!messagesRef.current) {
@@ -46,14 +47,20 @@ export default function MessageList({
       const isAtTop = messagesRef.current.scrollTop === 0;
       setIsAutoScrollEnabled(isAtBottom);
 
+      setIsScrollDownVisible(
+        messagesRef.current.scrollHeight - messagesRef.current.scrollTop >
+          messagesRef.current.clientHeight + 5
+      );
+
       if (!isAtBottom) {
         setIsAutoScrollEnabled(false);
       }
 
       if (isAtTop) {
         setLastHeight(messagesRef.current.scrollHeight);
-        console.log("load more");
-        onScrollTop && onScrollTop();
+        if (onScrollTop) {
+          onScrollTop();
+        }
       }
     }
   };
@@ -69,16 +76,18 @@ export default function MessageList({
   };
 
   useEffect(() => {
-    isAutoScrollEnabled && scrollToBottom();
+    if (isAutoScrollEnabled) {
+      scrollToBottom();
+    }
   }, [messages, isAutoScrollEnabled]);
   return (
     <div
-      className="flex w-full h-full flex-1 flex-col overflow-y-auto overflow-x-hidden relative"
+      className="flex w-full h-full flex-1 flex-col overflow-y-auto overflow-x-hidden relative gap-4"
       onScroll={handleScroll}
       ref={messagesRef}
     >
       {isLoading && <div className="m-auto">Loading...</div>}
-      <div className="mx-auto flex w-full max-w-[800px] flex-col gap-7">
+      <div className="mx-auto flex w-full max-w-[640px] flex-col p-6 gap-4">
         {messages?.map((item) => (
           <MessageBubble
             key={item._id}
@@ -87,16 +96,16 @@ export default function MessageList({
           />
         ))}
       </div>
-      {messagesRef.current &&
-        messagesRef.current.scrollHeight - messagesRef.current.scrollTop >
-          messagesRef.current.clientHeight + 5 && (
-          <button
-            className="fixed cursor-pointer right-2 bottom-14"
-            onClick={() => scrollToBottom(true)}
-          >
-            Bottom
-          </button>
-        )}
+      {isScrollDownVisible && (
+        <button
+          role="button"
+          aria-label="Scroll to bottom"
+          className="fixed cursor-pointer right-4 bottom-20 text-4xl"
+          onClick={() => scrollToBottom(true)}
+        >
+          ⬇️
+        </button>
+      )}
     </div>
   );
 }
